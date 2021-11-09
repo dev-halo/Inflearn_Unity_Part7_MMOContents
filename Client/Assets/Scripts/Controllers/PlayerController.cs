@@ -26,22 +26,22 @@ public class PlayerController : MonoBehaviour
                 case MoveDir.None:
                     if (dir == MoveDir.Up)
                     {
-                        animator.Play("WALK_BACK");
+                        animator.Play("IDLE_BACK");
                         transform.localScale = Vector3.one;
                     }
                     else if (dir == MoveDir.Down)
                     {
-                        animator.Play("WALK_FRONT");
+                        animator.Play("IDLE_FRONT");
                         transform.localScale = Vector3.one;
                     }
                     else if (dir == MoveDir.Left)
                     {
-                        animator.Play("WALK_RIGHT");
+                        animator.Play("IDLE_RIGHT");
                         transform.localScale = new Vector3(-1f, 1f, 1f);
                     }
                     else
                     {
-                        animator.Play("WALK_RIGHT");
+                        animator.Play("IDLE_RIGHT");
                         transform.localScale = Vector3.one;
                     }
                     break;
