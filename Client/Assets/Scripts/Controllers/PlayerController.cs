@@ -9,11 +9,69 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
 
     Vector3Int cellPos = Vector3Int.zero;
-    MoveDir dir = MoveDir.None;
     bool isMoving = false;
+    Animator animator;
+
+    MoveDir dir = MoveDir.Down;
+    public MoveDir Dir
+    {
+        get { return dir; }
+        set
+        {
+            if (dir == value)
+                return;
+
+            switch (value)
+            {
+                case MoveDir.None:
+                    if (dir == MoveDir.Up)
+                    {
+                        animator.Play("WALK_BACK");
+                        transform.localScale = Vector3.one;
+                    }
+                    else if (dir == MoveDir.Down)
+                    {
+                        animator.Play("WALK_FRONT");
+                        transform.localScale = Vector3.one;
+                    }
+                    else if (dir == MoveDir.Left)
+                    {
+                        animator.Play("WALK_RIGHT");
+                        transform.localScale = new Vector3(-1f, 1f, 1f);
+                    }
+                    else
+                    {
+                        animator.Play("WALK_RIGHT");
+                        transform.localScale = Vector3.one;
+                    }
+                    break;
+                case MoveDir.Up:
+                    animator.Play("WALK_BACK");
+                    transform.localScale = Vector3.one;
+                    break;
+                case MoveDir.Down:
+                    animator.Play("WALK_FRONT");
+                    transform.localScale = Vector3.one;
+                    break;
+                case MoveDir.Left:
+                    animator.Play("WALK_RIGHT");
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                    break;
+                case MoveDir.Right:
+                    animator.Play("WALK_RIGHT");
+                    transform.localScale = Vector3.one;
+                    break;
+                default:
+                    break;
+            }
+
+            dir = value;
+        }
+    }
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         Vector3 pos = grid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
         transform.position = pos;
     }
@@ -29,23 +87,23 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            dir = MoveDir.Up;
+            Dir = MoveDir.Up;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            dir = MoveDir.Down;
+            Dir = MoveDir.Down;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            dir = MoveDir.Left;
+            Dir = MoveDir.Left;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            dir = MoveDir.Right;
+            Dir = MoveDir.Right;
         }
         else
         {
-            dir = MoveDir.None;
+            Dir = MoveDir.None;
         }
     }
 
