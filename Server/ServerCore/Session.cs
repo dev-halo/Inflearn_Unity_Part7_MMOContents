@@ -27,8 +27,10 @@ namespace ServerCore
                 if (buffer.Count < dataSize)
                     break;
 
+                ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + sizeof(ushort));
+
                 // 여기까지 왔으면 패킷 조립 가능.
-                OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
+                OnRecvPacket(id, new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
                 ++packetCount;
 
                 processLen += dataSize;
@@ -41,7 +43,7 @@ namespace ServerCore
             return processLen;
         }
 
-        public abstract void OnRecvPacket(ArraySegment<byte> buffer);
+        public abstract void OnRecvPacket(ushort id, ArraySegment<byte> buffer);
     }
 
     public abstract class Session

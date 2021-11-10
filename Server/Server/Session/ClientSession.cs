@@ -1,4 +1,6 @@
-﻿using ServerCore;
+﻿using Google.Protobuf;
+using Google.Protobuf.Protocol;
+using ServerCore;
 using System;
 using System.Net;
 
@@ -7,7 +9,6 @@ namespace Server
 	class ClientSession : PacketSession
     {
         public int SessionId { get; set; }
-        public GameRoom Room { get; set; }
         public float PosX { get; set; }
         public float PosY { get; set; }
         public float PosZ { get; set; }
@@ -16,10 +17,22 @@ namespace Server
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            Program.Room.Push(() => Program.Room.Enter(this));
+            S_Chat chat = new S_Chat()
+            {
+                Context = "안녕하세요"
+            };
+
+            ushort size = (ushort)chat.CalculateSize();
+            byte[] sendBuffer = new byte[size + 4];
+            Array.Copy(BitConverter.GetBytes(size + 4), 0, sendBuffer, 0, sizeof(ushort));
+            ushort protocolId = (ushort)MsgId.SChat;
+            Array.Copy(BitConverter.GetBytes(protocolId), 0, sendBuffer, 2, sizeof(ushort));
+            Array.Copy(chat.ToByteArray(), 0, sendBuffer, 4, size);
+
+            Send(new ArraySegment<byte>(sendBuffer));
         }
 
-        public override void OnRecvPacket(ArraySegment<byte> buffer)
+        public override void OnRecvPacket(ushort id, ArraySegment<byte> buffer)
         {
             PacketManager.Instance.OnRecvPacket(this, buffer);
         }
@@ -27,12 +40,6 @@ namespace Server
         public override void OnDisconnected(EndPoint endPoint)
         {
             SessionManager.Instance.Remove(this);
-            if (Room != null)
-            {
-                GameRoom room = Room;
-                room.Push(() => room.Leave(this));
-                Room = null;
-            }
 
             Console.WriteLine($"OnDisconnected : {endPoint}");
         }

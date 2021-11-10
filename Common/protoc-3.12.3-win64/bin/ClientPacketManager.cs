@@ -22,8 +22,10 @@ public class PacketManager
     public void Register()
     {
 
-        makeFunc.Add((ushort)MsgId.CChat, MakePacket<C_Chat>);
-        handler.Add((ushort)MsgId.CChat, PacketHandler.C_ChatHandler);
+        makeFunc.Add((ushort)MsgId.SChat, MakePacket<S_Chat>);
+        handler.Add((ushort)MsgId.SChat, PacketHandler.S_ChatHandler);
+        makeFunc.Add((ushort)MsgId.SEnterGame, MakePacket<S_EnterGame>);
+        handler.Add((ushort)MsgId.SEnterGame, PacketHandler.S_EnterGameHandler);
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> onRecvCallback = null)

@@ -7,17 +7,15 @@ namespace Server
     class Program
     {
         static readonly List listener = new();
-        public static GameRoom Room = new GameRoom();
 
         static void FlushRoom()
         {
-            Room.Push(() => Room.Flush());
             JobTimer.Instance.Push(FlushRoom, 250);
         }
 
         static void Main(string[] args)
         {
-            // DNS (Domain Name System)
+           // DNS (Domain Name System)
             string host = Dns.GetHostName();
             IPHostEntry ipHost = Dns.GetHostEntry(host);
             IPAddress ipAddr = ipHost.AddressList[0];
