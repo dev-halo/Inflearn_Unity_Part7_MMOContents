@@ -18,14 +18,20 @@ public class GameScene : BaseScene
 
         for (int i = 0; i < 5; i++)
         {
-            GameObject monster = Managers.Resource.Instantiate("Creature/monster");
-            monster.name = $"Monster_{i + 1}";
-
             Vector3Int pos = new Vector3Int()
             {
                 x = Random.Range(-20, 20),
                 y = Random.Range(-10, 10)
             };
+
+            if (!Managers.Map.CanGo(pos))
+            {
+                --i;
+                continue;
+            }
+
+            GameObject monster = Managers.Resource.Instantiate("Creature/monster");
+            monster.name = $"Monster_{i + 1}";
 
             MonsterController mc = monster.GetComponent<MonsterController>();
             mc.CellPos = pos;
