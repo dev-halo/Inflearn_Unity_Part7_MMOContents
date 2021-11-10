@@ -168,7 +168,7 @@ public class MapManager
                 if (open[next.Y, next.X] < g + h)
                     continue;
 
-                open[dest.Y, dest.X] = g + h;
+                open[next.Y, next.X] = g + h;
                 pq.Push(new PQNode() { F = g + h, G = g, Y = next.Y, X = next.X });
                 parent[next.Y, next.X] = new Pos(node.Y, node.X);
             }
