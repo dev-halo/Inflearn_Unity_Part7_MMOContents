@@ -256,4 +256,9 @@ public class CreatureController : MonoBehaviour
     protected virtual void UpdateDead()
     {
     }
+
+    public virtual void OnDamaged()
+    {
+
+    }
 }

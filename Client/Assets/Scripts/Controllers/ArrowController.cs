@@ -32,7 +32,7 @@ public class ArrowController : CreatureController
 
     protected override void UpdateAnimation()
     {
-        
+
     }
 
     protected override void UpdateIdle()
@@ -70,6 +70,10 @@ public class ArrowController : CreatureController
                 }
                 else
                 {
+                    CreatureController cc = go.GetComponent<CreatureController>();
+                    if (cc != null)
+                        cc.OnDamaged();
+
                     Debug.Log(go.name);
                     Managers.Resource.Destroy(gameObject);
                 }
