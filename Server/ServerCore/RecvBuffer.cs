@@ -4,7 +4,7 @@ namespace ServerCore
 {
     public class RecvBuffer
     {
-        readonly ArraySegment<byte> buffer;
+        ArraySegment<byte> buffer;
         int readPos;
         int writePos;
 

@@ -10,20 +10,6 @@ class ServerSession : PacketSession
     public override void OnConnected(EndPoint endPoint)
     {
         Debug.Log($"OnConnected : {endPoint}");
-
-        C_Chat chat = new C_Chat()
-        {
-            Context = "안녕하세요"
-        };
-
-        ushort size = (ushort)chat.CalculateSize();
-        byte[] sendBuffer = new byte[size + 4];
-        Array.Copy(BitConverter.GetBytes(size + 4), 0, sendBuffer, 0, sizeof(ushort));
-        ushort protocolId = (ushort)MsgId.SChat;
-        Array.Copy(BitConverter.GetBytes(protocolId), 0, sendBuffer, 2, sizeof(ushort));
-        Array.Copy(chat.ToByteArray(), 0, sendBuffer, 4, size);
-
-        Send(new ArraySegment<byte>(sendBuffer));
     }
 
     public override void OnDisconnected(EndPoint endPoint)
@@ -31,10 +17,9 @@ class ServerSession : PacketSession
         Debug.Log($"OnConnected : {endPoint}");
     }
 
-    public override void OnRecvPacket(ushort id, ArraySegment<byte> buffer)
+    public override void OnRecvPacket(ArraySegment<byte> buffer)
     {
-        Debug.Log("ddD");
-        PacketManager.Instance.OnRecvPacket(this, buffer, (s, p) => PacketQueue.Instance.Push(id, p));
+        PacketManager.Instance.OnRecvPacket(this, buffer);
     }
 
     public override void OnSend(int numOfBytes)

@@ -5,7 +5,7 @@ namespace ServerCore
 {
     public class PriorityQueue<T> where T : IComparable<T>
     {
-        readonly List<T> _heap = new();
+        List<T> _heap = new List<T>();
 
         public int Count { get { return _heap.Count; } }
 
@@ -86,7 +86,7 @@ namespace ServerCore
         public T Peek()
         {
             if (_heap.Count == 0)
-                return default;
+                return default(T);
             return _heap[0];
         }
     }

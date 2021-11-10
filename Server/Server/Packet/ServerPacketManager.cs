@@ -16,17 +16,17 @@ public class PacketManager
         Register();
     }
 
-    readonly Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IMessage>> makeFunc = new Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IMessage>>();
+    readonly Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
     readonly Dictionary<ushort, Action<PacketSession, IMessage>> handler = new Dictionary<ushort, Action<PacketSession, IMessage>>();
 
     public void Register()
     {
-
-        makeFunc.Add((ushort)MsgId.CChat, MakePacket<C_Chat>);
+        onRecv.Add((ushort)MsgId.CChat, MakePacket<C_Chat>);
         handler.Add((ushort)MsgId.CChat, PacketHandler.C_ChatHandler);
+
     }
 
-    public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> onRecvCallback = null)
+    public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
     {
         ushort count = 0;
 
@@ -35,28 +35,16 @@ public class PacketManager
         ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
         count += 2;
 
-        if (makeFunc.TryGetValue(id, out Func<PacketSession, ArraySegment<byte>, IMessage> func))
-        {
-            IMessage packet = func.Invoke(session, buffer);
-
-            if (onRecvCallback != null)
-                onRecvCallback.Invoke(session, packet);
-            else
-                HandlePacket(session, packet, id);
-        }
+        if (onRecv.TryGetValue(id, out Action<PacketSession, ArraySegment<byte>, ushort> action))
+            action.Invoke(session, buffer, id);
     }
 
-    T MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IMessage, new()
+    void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer, ushort id) where T : IMessage, new()
     {
         T pkt = new T();
         pkt.MergeFrom(buffer.Array, buffer.Offset + 4, buffer.Count - 4);
-        return pkt;
-    }
-
-    public void HandlePacket(PacketSession session, IMessage packet, ushort id)
-    {
         if (handler.TryGetValue(id, out Action<PacketSession, IMessage> action))
-            action.Invoke(session, packet);
+            action.Invoke(session, pkt);
     }
 
 	public Action<PacketSession, IMessage> GetPacketHandler(ushort id)

@@ -10,8 +10,8 @@ namespace ServerCore
 
     public class JobQueue : IJobQueue
     {
-        readonly Queue<Action> jobQueue = new();
-        readonly object _lock = new();
+        Queue<Action> jobQueue = new Queue<Action>();
+        object _lock = new object();
         bool _flush = false;
 
         public void Push(Action job)

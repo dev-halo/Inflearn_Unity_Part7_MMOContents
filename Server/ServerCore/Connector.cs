@@ -13,10 +13,10 @@ namespace ServerCore
             for (int i = 0; i < count; ++i)
             {
                 // 휴대폰 설정
-                Socket socket = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 this.sessionFactory = sessionFactory;
 
-                SocketAsyncEventArgs args = new();
+                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
                 args.Completed += OnConnectCompleted;
                 args.RemoteEndPoint = endPoint;
                 args.UserToken = socket;
@@ -27,7 +27,8 @@ namespace ServerCore
 
         void RegisterConnect(SocketAsyncEventArgs args)
         {
-            if (args.UserToken is not Socket socket)
+            Socket socket = args.UserToken as Socket;
+            if (socket == null)
                 return;
 
             bool pending = socket.ConnectAsync(args);

@@ -9,9 +9,6 @@ namespace Server
 	class ClientSession : PacketSession
     {
         public int SessionId { get; set; }
-        public float PosX { get; set; }
-        public float PosY { get; set; }
-        public float PosZ { get; set; }
 
         public override void OnConnected(EndPoint endPoint)
         {
@@ -32,7 +29,7 @@ namespace Server
             Send(new ArraySegment<byte>(sendBuffer));
         }
 
-        public override void OnRecvPacket(ushort id, ArraySegment<byte> buffer)
+        public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
             PacketManager.Instance.OnRecvPacket(this, buffer);
         }

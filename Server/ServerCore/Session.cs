@@ -27,10 +27,8 @@ namespace ServerCore
                 if (buffer.Count < dataSize)
                     break;
 
-                ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + sizeof(ushort));
-
                 // 여기까지 왔으면 패킷 조립 가능.
-                OnRecvPacket(id, new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
+                OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
                 ++packetCount;
 
                 processLen += dataSize;
@@ -43,18 +41,20 @@ namespace ServerCore
             return processLen;
         }
 
-        public abstract void OnRecvPacket(ushort id, ArraySegment<byte> buffer);
+        public abstract void OnRecvPacket(ArraySegment<byte> buffer);
     }
 
     public abstract class Session
     {
         Socket socket;
         int disconnected = 0;
-        readonly RecvBuffer recvBuffer = new(65535);
-        readonly object _lock = new();
-        readonly Queue<ArraySegment<byte>> sendQueue = new();
-        readonly List<ArraySegment<byte>> pendingList = new();
-        readonly SocketAsyncEventArgs sendArgs = new();
+
+        RecvBuffer recvBuffer = new RecvBuffer(65535);
+
+        object _lock = new object();
+        Queue<ArraySegment<byte>> sendQueue = new Queue<ArraySegment<byte>>();
+        List<ArraySegment<byte>> pendingList = new List<ArraySegment<byte>>();
+        SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
 
         public abstract void OnConnected(EndPoint endPoint);
         public abstract int OnRecv(ArraySegment<byte> buffer);

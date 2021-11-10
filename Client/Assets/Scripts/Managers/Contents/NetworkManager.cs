@@ -33,7 +33,6 @@ public class NetworkManager
     {
         List<PacketMessage> list = PacketQueue.Instance.PopAll();
         foreach (PacketMessage packet in list)
-        //PacketManager.Instance.HandlePacket(session, packet.Message, packet.Id);
         {
             Action<PacketSession, IMessage> handler = PacketManager.Instance.GetPacketHandler(packet.Id);
             if (handler != null)

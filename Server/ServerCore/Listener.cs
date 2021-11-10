@@ -23,7 +23,7 @@ namespace ServerCore
 
             for (int i = 0; i < register; ++i)
             {
-                SocketAsyncEventArgs args = new();
+                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
                 args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
                 RegisterAccept(args);
             }
