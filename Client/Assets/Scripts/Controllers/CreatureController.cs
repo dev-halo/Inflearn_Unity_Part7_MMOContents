@@ -44,6 +44,33 @@ public class CreatureController : MonoBehaviour
         }
     }
 
+    public Vector3Int GetFrontCellPos()
+    {
+        Vector3Int cellPos = CellPos;
+
+        switch (lastDir)
+        {
+            case MoveDir.None:
+                break;
+            case MoveDir.Up:
+                cellPos += Vector3Int.up;
+                break;
+            case MoveDir.Down:
+                cellPos += Vector3Int.down;
+                break;
+            case MoveDir.Left:
+                cellPos += Vector3Int.left;
+                break;
+            case MoveDir.Right:
+                cellPos += Vector3Int.right;
+                break;
+            default:
+                break;
+        }
+
+        return cellPos;
+    }
+
     protected virtual void UpdateAnimation()
     {
         if (state == CreatureState.Idle)
@@ -77,7 +104,6 @@ public class CreatureController : MonoBehaviour
             switch (dir)
             {
                 case MoveDir.None:
-
                     break;
                 case MoveDir.Up:
                     animator.Play("WALK_BACK");
@@ -101,6 +127,29 @@ public class CreatureController : MonoBehaviour
         }
         else if (state == CreatureState.Skill)
         {
+            switch (lastDir)
+            {
+                case MoveDir.None:
+                    break;
+                case MoveDir.Up:
+                    animator.Play("ATTACK_BACK");
+                    sprite.flipX = false;
+                    break;
+                case MoveDir.Down:
+                    animator.Play("ATTACK_FRONT");
+                    sprite.flipX = false;
+                    break;
+                case MoveDir.Left:
+                    animator.Play("ATTACK_RIGHT");
+                    sprite.flipX = true;
+                    break;
+                case MoveDir.Right:
+                    animator.Play("ATTACK_RIGHT");
+                    sprite.flipX = false;
+                    break;
+                default:
+                    break;
+            }
         }
         else
         {
@@ -127,36 +176,26 @@ public class CreatureController : MonoBehaviour
 
     protected virtual void UpdateController()
     {
-        UpdatePosition();
-        UpdateIsMoving();
-    }
-
-    void UpdatePosition()
-    {
-        if (State != CreatureState.Moving)
-            return;
-
-        Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
-        Vector3 moveDir = destPos - transform.position;
-
-        float dist = moveDir.magnitude;
-        if (dist < speed * Time.deltaTime)
+        switch (State)
         {
-            transform.position = destPos;
-            state = CreatureState.Idle;
-            if (dir == MoveDir.None)
-                UpdateAnimation();
-        }
-        else
-        {
-            transform.position += moveDir.normalized * speed * Time.deltaTime;
-            State = CreatureState.Moving;
+            case CreatureState.Idle:
+                UpdateIdle();
+                break;
+            case CreatureState.Moving:
+                UpdateMoving();
+                break;
+            case CreatureState.Skill:
+                break;
+            case CreatureState.Dead:
+                break;
+            default:
+                break;
         }
     }
 
-    void UpdateIsMoving()
+    protected virtual void UpdateIdle()
     {
-        if (State == CreatureState.Idle && dir != MoveDir.None)
+        if (dir != MoveDir.None)
         {
             Vector3Int destPos = CellPos;
 
@@ -188,5 +227,33 @@ public class CreatureController : MonoBehaviour
                 }
             }
         }
+    }
+
+    protected virtual void UpdateMoving()
+    {
+        Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
+        Vector3 moveDir = destPos - transform.position;
+
+        float dist = moveDir.magnitude;
+        if (dist < speed * Time.deltaTime)
+        {
+            transform.position = destPos;
+            state = CreatureState.Idle;
+            if (dir == MoveDir.None)
+                UpdateAnimation();
+        }
+        else
+        {
+            transform.position += moveDir.normalized * speed * Time.deltaTime;
+            State = CreatureState.Moving;
+        }
+    }
+
+    protected virtual void UpdateSkill()
+    {
+    }
+
+    protected virtual void UpdateDead()
+    {
     }
 }
