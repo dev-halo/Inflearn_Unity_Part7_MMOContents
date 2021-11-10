@@ -5,6 +5,7 @@ using static Define;
 
 public class CreatureController : MonoBehaviour
 {
+    [SerializeField]
     public float speed = 5f;
 
     public Vector3Int CellPos { get; set; } = Vector3Int.zero;
@@ -12,6 +13,7 @@ public class CreatureController : MonoBehaviour
     protected Animator animator;
     protected SpriteRenderer sprite;
 
+    [SerializeField]
     protected CreatureState state = CreatureState.Idle;
     public virtual CreatureState State
     {
@@ -27,6 +29,7 @@ public class CreatureController : MonoBehaviour
     }
 
     protected MoveDir lastDir = MoveDir.Down;
+    [SerializeField]
     protected MoveDir dir = MoveDir.Down;
     public MoveDir Dir
     {
