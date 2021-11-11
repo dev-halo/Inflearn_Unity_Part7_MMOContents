@@ -21,8 +21,8 @@ public class PacketManager
 
     public void Register()
     {
-        onRecv.Add((ushort)MsgId.CChat, MakePacket<C_Chat>);
-        handler.Add((ushort)MsgId.CChat, PacketHandler.C_ChatHandler);
+        onRecv.Add((ushort)MsgId.CMove, MakePacket<C_Move>);
+        handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);
 
     }
 

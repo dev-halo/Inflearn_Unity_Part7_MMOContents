@@ -21,10 +21,16 @@ public class PacketManager
 
     public void Register()
     {
-        onRecv.Add((ushort)MsgId.SChat, MakePacket<S_Chat>);
-        handler.Add((ushort)MsgId.SChat, PacketHandler.S_ChatHandler);
         onRecv.Add((ushort)MsgId.SEnterGame, MakePacket<S_EnterGame>);
         handler.Add((ushort)MsgId.SEnterGame, PacketHandler.S_EnterGameHandler);
+        onRecv.Add((ushort)MsgId.SLeaveGame, MakePacket<S_LeaveGame>);
+        handler.Add((ushort)MsgId.SLeaveGame, PacketHandler.S_LeaveGameHandler);
+        onRecv.Add((ushort)MsgId.SSpawn, MakePacket<S_Spawn>);
+        handler.Add((ushort)MsgId.SSpawn, PacketHandler.S_SpawnHandler);
+        onRecv.Add((ushort)MsgId.SDespawn, MakePacket<S_Despawn>);
+        handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);
+        onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
+        handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
 
     }
 

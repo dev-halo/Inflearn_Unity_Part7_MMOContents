@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Server.Game
+{
+    public class RoomManager
+    {
+        public static RoomManager Instance { get; } = new RoomManager();
+
+        object _lock = new object();
+        Dictionary<int, GameRoom> rooms = new Dictionary<int, GameRoom>();
+        int roomId = 1;
+
+        public GameRoom Add()
+        {
+            GameRoom gameRoom = new GameRoom();
+
+            lock (_lock)
+            {
+                gameRoom.RoomId = roomId;
+                rooms.Add(roomId, gameRoom);
+                roomId++;
+            }
+
+            return gameRoom;
+        }
+
+        public bool Remove(int roomId)
+        {
+            lock (_lock)
+            {
+                return rooms.Remove(roomId);
+            }
+        }
+
+        public GameRoom Find(int roomId)
+        {
+            lock (_lock)
+            {
+                if (rooms.TryGetValue(roomId, out GameRoom room))
+                    return room;
+                return null;
+            }
+        }
+    }
+}
