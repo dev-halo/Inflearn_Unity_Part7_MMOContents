@@ -33,6 +33,8 @@ public class PacketManager
         handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);
         onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
         handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
+        onRecv.Add((ushort)MsgId.SSkill, MakePacket<S_Skill>);
+        handler.Add((ushort)MsgId.SSkill, PacketHandler.S_SkillHandler);
 
     }
 
