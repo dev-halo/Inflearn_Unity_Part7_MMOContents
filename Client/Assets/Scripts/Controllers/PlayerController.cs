@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
 public class PlayerController : CreatureController
 {
-    Coroutine coSkill;
-    bool rangedSkill = false;
+    protected Coroutine coSkill;
+    protected bool rangedSkill = false;
 
     protected override void Init()
     {
@@ -100,28 +99,7 @@ public class PlayerController : CreatureController
 
     protected override void UpdateController()
     {
-        switch (State)
-        {
-            case CreatureState.Idle:
-                GetDirInput();
-                break;
-            case CreatureState.Moving:
-                GetDirInput();
-                break;
-            case CreatureState.Skill:
-                break;
-            case CreatureState.Dead:
-                break;
-            default:
-                break;
-        }
-
         base.UpdateController();
-    }
-
-    void LateUpdate()
-    {
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10f);
     }
 
     protected override void UpdateIdle()
@@ -131,40 +109,9 @@ public class PlayerController : CreatureController
             State = CreatureState.Moving;
             return;
         }
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            State = CreatureState.Skill;
-            //coSkill = StartCoroutine(CoStartPunch());
-            coSkill = StartCoroutine(CoStartShootArrow());
-        }
     }
 
-    void GetDirInput()
-    {
-        if (Input.GetKey(KeyCode.W))
-        {
-            Dir = MoveDir.Up;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            Dir = MoveDir.Down;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            Dir = MoveDir.Left;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            Dir = MoveDir.Right;
-        }
-        else
-        {
-            Dir = MoveDir.None;
-        }
-    }
-
-    IEnumerator CoStartPunch()
+    protected IEnumerator CoStartPunch()
     {
         GameObject go = Managers.Object.Find(GetFrontCellPos());
         if (go != null)
@@ -180,7 +127,7 @@ public class PlayerController : CreatureController
         coSkill = null;
     }
 
-    IEnumerator CoStartShootArrow()
+    protected IEnumerator CoStartShootArrow()
     {
         GameObject go = Managers.Resource.Instantiate("Creature/Arrow");
         ArrowController ac = go.GetComponent<ArrowController>();
