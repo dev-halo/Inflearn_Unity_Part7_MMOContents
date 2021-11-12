@@ -10,9 +10,9 @@ public class NetworkManager
 {
     ServerSession session = new ServerSession();
 
-    public void Send(ArraySegment<byte> sendBuff)
+    public void Send(IMessage packet)
     {
-        session.Send(sendBuff);
+        session.Send(packet);
     }
 
     public void Init()
