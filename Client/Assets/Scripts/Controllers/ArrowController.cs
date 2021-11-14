@@ -8,10 +8,8 @@ public class ArrowController : CreatureController
 {
     protected override void Init()
     {
-        switch (lastDir)
+        switch (Dir)
         {
-            case MoveDir.None:
-                break;
             case MoveDir.Up:
                 transform.rotation = Quaternion.Euler(0f, 0f, 0f);
                 break;

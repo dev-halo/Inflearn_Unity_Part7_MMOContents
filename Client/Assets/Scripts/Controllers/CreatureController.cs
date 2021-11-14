@@ -68,7 +68,6 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-    protected MoveDir lastDir = MoveDir.Down;
     public MoveDir Dir
     {
         get { return PosInfo.MoveDir; }
@@ -78,8 +77,6 @@ public class CreatureController : MonoBehaviour
                 return;
 
             PosInfo.MoveDir = value;
-            if (value != MoveDir.None)
-                lastDir = value;
 
             UpdateAnimation();
             updated = true;
@@ -94,20 +91,16 @@ public class CreatureController : MonoBehaviour
             return MoveDir.Left;
         else if (dir.y > 0)
             return MoveDir.Up;
-        else if (dir.y < 0)
-            return MoveDir.Down;
         else
-            return MoveDir.None;
+            return MoveDir.Down;
     }
 
     public Vector3Int GetFrontCellPos()
     {
         Vector3Int cellPos = CellPos;
 
-        switch (lastDir)
+        switch (Dir)
         {
-            case MoveDir.None:
-                break;
             case MoveDir.Up:
                 cellPos += Vector3Int.up;
                 break;
@@ -131,10 +124,8 @@ public class CreatureController : MonoBehaviour
     {
         if (State == CreatureState.Idle)
         {
-            switch (lastDir)
+            switch (Dir)
             {
-                case MoveDir.None:
-                    break;
                 case MoveDir.Up:
                     animator.Play("IDLE_BACK");
                     sprite.flipX = false;
@@ -159,8 +150,6 @@ public class CreatureController : MonoBehaviour
         {
             switch (Dir)
             {
-                case MoveDir.None:
-                    break;
                 case MoveDir.Up:
                     animator.Play("WALK_BACK");
                     sprite.flipX = false;
@@ -183,10 +172,8 @@ public class CreatureController : MonoBehaviour
         }
         else if (State == CreatureState.Skill)
         {
-            switch (lastDir)
+            switch (Dir)
             {
-                case MoveDir.None:
-                    break;
                 case MoveDir.Up:
                     animator.Play("ATTACK_BACK");
                     sprite.flipX = false;
@@ -230,7 +217,7 @@ public class CreatureController : MonoBehaviour
         transform.position = pos;
 
         State = CreatureState.Idle;
-        Dir = MoveDir.None;
+        Dir = MoveDir.Down;
         UpdateAnimation();
     }
 

@@ -14,9 +14,10 @@ namespace Server.Game
         Dictionary<int, GameRoom> rooms = new Dictionary<int, GameRoom>();
         int roomId = 1;
 
-        public GameRoom Add()
+        public GameRoom Add(int mapId)
         {
             GameRoom gameRoom = new GameRoom();
+            gameRoom.Init(mapId);
 
             lock (_lock)
             {
