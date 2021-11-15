@@ -56,7 +56,6 @@ public class MonsterController : CreatureController
         State = CreatureState.Idle;
         Dir = MoveDir.Down;
 
-        speed = 3f;
         rangedSkill = (Random.Range(0, 2) == 0 ? true : false);
 
         if (rangedSkill)

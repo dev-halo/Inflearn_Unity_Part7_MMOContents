@@ -8,8 +8,26 @@ public class CreatureController : MonoBehaviour
 {
     public int Id { get; set; }
 
-    [SerializeField]
-    public float speed = 5f;
+    StatInfo stat = new StatInfo();
+    public StatInfo Stat
+    {
+        get { return stat; }
+        set
+        {
+            if (stat.Equals(value))
+                return;
+
+            stat.Hp = value.Hp;
+            stat.MaxHp = value.MaxHp;
+            stat.Speed = value.Speed;
+        }
+    }
+
+    public float Speed
+    {
+        get { return stat.Speed; }
+        set { stat.Speed = value; }
+    }
 
     protected bool updated = false;
 
@@ -250,14 +268,14 @@ public class CreatureController : MonoBehaviour
         Vector3 moveDir = destPos - transform.position;
 
         float dist = moveDir.magnitude;
-        if (dist < speed * Time.deltaTime)
+        if (dist < Speed * Time.deltaTime)
         {
             transform.position = destPos;
             MoveToNextPos();
         }
         else
         {
-            transform.position += moveDir.normalized * speed * Time.deltaTime;
+            transform.position += moveDir.normalized * Speed * Time.deltaTime;
             State = CreatureState.Moving;
         }
     }
