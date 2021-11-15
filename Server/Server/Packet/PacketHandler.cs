@@ -38,8 +38,6 @@ class PacketHandler
         if (room == null)
             return;
 
-        Console.WriteLine($"PlayerId : {player.Info.PlayerId} C_Skill"); ;
-
         room.HandleSkill(player, skillPacket);
     }
 }

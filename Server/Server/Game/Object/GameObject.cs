@@ -7,26 +7,40 @@ using System.Threading.Tasks;
 
 namespace Server.Game
 {
-    public class Player
+    public class GameObject
     {
-        public PlayerInfo Info { get; set; } = new PlayerInfo()
+        public GameObjectType ObjectType { get; protected set; } = GameObjectType.None;
+        public int Id
         {
-            PosInfo = new PositionInfo()
-        };
+            get { return Info.ObjectId; }
+            set { Info.ObjectId = value; }
+        }
+
         public GameRoom Room { get; set; }
-        public ClientSession Session { get; set; }
+        public ObjectInfo Info { get; set; } = new ObjectInfo();
+        public PositionInfo PosInfo { get; private set; } = new PositionInfo();
+
+        public GameObject()
+        {
+            Info.PosInfo = PosInfo;
+        }
 
         public Vector2Int CellPos
         {
             get
             {
-                return new Vector2Int(Info.PosInfo.PosX, Info.PosInfo.PosY);
+                return new Vector2Int(PosInfo.PosX, PosInfo.PosY);
             }
             set
             {
-                Info.PosInfo.PosX = value.x;
-                Info.PosInfo.PosY = value.y;
+                PosInfo.PosX = value.x;
+                PosInfo.PosY = value.y;
             }
+        }
+
+        public Vector2Int GetFrontCellPos()
+        {
+            return GetFrontCellPos(PosInfo.MoveDir);
         }
 
         public Vector2Int GetFrontCellPos(MoveDir dir)
