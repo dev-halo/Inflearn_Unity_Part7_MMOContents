@@ -37,6 +37,8 @@ public class PacketManager
         handler.Add((ushort)MsgId.SSkill, PacketHandler.S_SkillHandler);
         onRecv.Add((ushort)MsgId.SChangeHp, MakePacket<S_ChangeHp>);
         handler.Add((ushort)MsgId.SChangeHp, PacketHandler.S_ChangeHpHandler);
+        onRecv.Add((ushort)MsgId.SDie, MakePacket<S_Die>);
+        handler.Add((ushort)MsgId.SDie, PacketHandler.S_DieHandler);
 
     }
 
