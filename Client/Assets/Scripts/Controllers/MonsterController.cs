@@ -8,17 +8,9 @@ public class MonsterController : CreatureController
 {
     Coroutine coSkill;
 
-    [SerializeField]
-    bool rangedSkill = false;
-
     protected override void Init()
     {
         base.Init();
-
-        State = CreatureState.Idle;
-        Dir = MoveDir.Down;
-
-        rangedSkill = (Random.Range(0, 2) == 0 ? true : false);
     }
 
     protected override void UpdateIdle()
@@ -32,30 +24,11 @@ public class MonsterController : CreatureController
         //Managers.Resource.Destroy(gameObject);
     }
 
-    IEnumerator CoStartPunch()
+    public override void UseSkill(int skillId)
     {
-        GameObject go = Managers.Object.FindCreature(GetFrontCellPos());
-        if (go != null)
+        if (skillId == 1)
         {
-            CreatureController cc = go.GetComponent<CreatureController>();
-            if (cc != null)
-                cc.OnDamaged();
+            State = CreatureState.Skill;
         }
-
-        yield return new WaitForSeconds(0.5f);
-        State = CreatureState.Moving;
-        coSkill = null;
-    }
-
-    IEnumerator CoStartShootArrow()
-    {
-        GameObject go = Managers.Resource.Instantiate("Creature/Arrow");
-        ArrowController ac = go.GetComponent<ArrowController>();
-        ac.Dir = Dir;
-        ac.CellPos = CellPos;
-
-        yield return new WaitForSeconds(0.3f);
-        State = CreatureState.Moving;
-        coSkill = null;
     }
 }
