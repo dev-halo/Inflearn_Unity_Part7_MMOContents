@@ -39,10 +39,12 @@ class PacketHandler
     public static void S_MoveHandler(PacketSession session, IMessage packet)
     {
         S_Move movePacket = packet as S_Move;
-        ServerSession serverSession = session as ServerSession;
 
         GameObject go = Managers.Object.FindById(movePacket.ObjectId);
         if (go == null)
+            return;
+
+        if (Managers.Object.MyPlayer.Id == movePacket.ObjectId)
             return;
 
         BaseController bc = go.GetComponent<BaseController>();
