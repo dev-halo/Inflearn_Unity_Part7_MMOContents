@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Server.Data;
@@ -10,10 +11,17 @@ namespace Server
     class Program
     {
         static readonly List listener = new();
+        static List<System.Timers.Timer> timers = new List<System.Timers.Timer>();
 
-        static void FlushRoom()
+        static void TickRoom(GameRoom room, int tick = 100)
         {
-            JobTimer.Instance.Push(FlushRoom, 250);
+            var timer = new System.Timers.Timer();
+            timer.Interval = tick;
+            timer.Elapsed += ((s, e) => { room.Update(); });
+            timer.AutoReset = true;
+            timer.Enabled = true;
+
+            timers.Add(timer);
         }
 
         static void Main(string[] args)
@@ -23,9 +31,10 @@ namespace Server
 
             var d = DataManager.StatDict;
 
-            RoomManager.Instance.Add(1);
+            GameRoom room = RoomManager.Instance.Add(1);
+            TickRoom(room, 50);
 
-           // DNS (Domain Name System)
+            // DNS (Domain Name System)
             string host = Dns.GetHostName();
             IPHostEntry ipHost = Dns.GetHostEntry(host);
             IPAddress ipAddr = ipHost.AddressList[0];
@@ -41,8 +50,6 @@ namespace Server
             while (true)
             {
                 //JobTimer.Instance.Flush();
-                GameRoom room = RoomManager.Instance.Find(1);
-                room.Push(room.Update);
                 Thread.Sleep(100);
             }
         }
